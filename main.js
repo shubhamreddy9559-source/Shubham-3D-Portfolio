@@ -1,5 +1,4 @@
-import * as THREE from "./three.module.min.js";
-
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.min.js";
 /* ==========================================
    SHUBHAM'S 3D AI PORTFOLIO
    REAL THREE.JS WORLD
