@@ -53,10 +53,23 @@ camera.position.set(
    RENDERER
    ========================================== */
 
-const renderer = new THREE.WebGLRenderer({
-    antialias: true,
-    powerPreference: "high-performance"
-});
+let renderer;
+
+try {
+    renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        powerPreference: "default"
+    });
+} catch (error) {
+    console.error("WebGL initialization failed:", error);
+
+    loadingText.textContent =
+        "3D graphics could not start on this device.";
+
+    loadingProgress.style.width = "100%";
+
+    throw error;
+}
 
 renderer.setSize(
     window.innerWidth,
