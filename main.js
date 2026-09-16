@@ -44,8 +44,14 @@ const camera = new THREE.PerspectiveCamera(
 
 camera.position.set(
     0,
-    7,
-    15
+    9,
+    22
+);
+
+camera.lookAt(
+    0,
+    3,
+    0
 );
 
 /* ==========================================
@@ -912,7 +918,7 @@ const player =
 player.position.set(
     0,
     0,
-    10
+    5
 );
 
 scene.add(player);
