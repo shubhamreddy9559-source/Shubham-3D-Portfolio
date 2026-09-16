@@ -546,6 +546,284 @@ createBuilding(
     "View my skills, education, projects and career journey.",
     "📄"
 );
+/* ==========================================
+   PREMIUM CITY ENVIRONMENT
+   ========================================== */
+
+function createNeonStrip(x, y, z, width, depth, color) {
+    const strip = new THREE.Mesh(
+        new THREE.BoxGeometry(width, 0.035, depth),
+        new THREE.MeshBasicMaterial({
+            color: color,
+            transparent: true,
+            opacity: 0.9
+        })
+    );
+
+    strip.position.set(x, y, z);
+    scene.add(strip);
+
+    return strip;
+}
+
+/* CENTRAL PLAZA */
+
+const plaza = new THREE.Mesh(
+    new THREE.CylinderGeometry(
+        9,
+        9,
+        0.12,
+        64
+    ),
+    new THREE.MeshStandardMaterial({
+        color: 0x07101c,
+        metalness: 0.8,
+        roughness: 0.3,
+        emissive: 0x061b2a,
+        emissiveIntensity: 0.8
+    })
+);
+
+plaza.position.y = 0.08;
+scene.add(plaza);
+
+/* PLAZA RINGS */
+
+for (let i = 0; i < 3; i++) {
+
+    const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(
+            4 + i * 1.7,
+            0.035,
+            8,
+            96
+        ),
+        new THREE.MeshBasicMaterial({
+            color: i % 2 === 0
+                ? 0x00eaff
+                : 0x7b5cff,
+            transparent: true,
+            opacity: 0.8
+        })
+    );
+
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = 0.16;
+
+    scene.add(ring);
+}
+
+/* NEON ROAD STRIPS */
+
+createNeonStrip(
+    0,
+    0.11,
+    0,
+    170,
+    0.06,
+    0x00eaff
+);
+
+createNeonStrip(
+    0,
+    0.11,
+    0,
+    0.06,
+    170,
+    0x7b5cff
+);
+
+/* HOLOGRAPHIC CITY PILLARS */
+
+function createHoloPillar(x, z, color) {
+
+    const group = new THREE.Group();
+
+    const pillar = new THREE.Mesh(
+        new THREE.CylinderGeometry(
+            0.18,
+            0.18,
+            4,
+            16
+        ),
+        new THREE.MeshStandardMaterial({
+            color: color,
+            emissive: color,
+            emissiveIntensity: 2.5,
+            metalness: 0.6,
+            roughness: 0.25
+        })
+    );
+
+    pillar.position.y = 2;
+
+    group.add(pillar);
+
+    const ring = new THREE.Mesh(
+        new THREE.TorusGeometry(
+            0.65,
+            0.035,
+            8,
+            32
+        ),
+        new THREE.MeshBasicMaterial({
+            color: color
+        })
+    );
+
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = 2;
+
+    group.add(ring);
+
+    const light = new THREE.PointLight(
+        color,
+        8,
+        10
+    );
+
+    light.position.y = 2;
+
+    group.add(light);
+
+    group.position.set(x, 0, z);
+
+    scene.add(group);
+
+    return group;
+}
+
+createHoloPillar(-7, -7, 0x00eaff);
+createHoloPillar(7, -7, 0x7b5cff);
+createHoloPillar(-7, 7, 0x7b5cff);
+createHoloPillar(7, 7, 0x00eaff);
+
+/* DISTANT FUTURISTIC SKYLINE */
+
+function createSkyBuilding(x, z, width, height, depth) {
+
+    const building = new THREE.Mesh(
+        new THREE.BoxGeometry(
+            width,
+            height,
+            depth
+        ),
+        new THREE.MeshStandardMaterial({
+            color: 0x070d18,
+            metalness: 0.7,
+            roughness: 0.4,
+            emissive: 0x020914,
+            emissiveIntensity: 0.7
+        })
+    );
+
+    building.position.set(
+        x,
+        height / 2,
+        z
+    );
+
+    scene.add(building);
+
+    /* rooftop glow */
+
+    const roof = new THREE.Mesh(
+        new THREE.BoxGeometry(
+            width * 0.75,
+            0.08,
+            depth * 0.75
+        ),
+        new THREE.MeshBasicMaterial({
+            color: 0x00eaff
+        })
+    );
+
+    roof.position.set(
+        x,
+        height + 0.05,
+        z
+    );
+
+    scene.add(roof);
+}
+
+/* BACKGROUND CITY */
+
+const skyline = [
+    [-55, -45, 8, 20, 8],
+    [-42, -52, 6, 14, 7],
+    [-28, -55, 9, 24, 8],
+    [28, -55, 8, 19, 8],
+    [43, -50, 7, 27, 7],
+    [58, -42, 10, 18, 9],
+    [-55, 45, 9, 25, 9],
+    [-40, 52, 7, 18, 7],
+    [40, 52, 9, 23, 8],
+    [55, 45, 7, 17, 7]
+];
+
+skyline.forEach(data => {
+    createSkyBuilding(
+        data[0],
+        data[1],
+        data[2],
+        data[3],
+        data[4]
+    );
+});
+
+/* FLOATING CITY MARKERS */
+
+function createFloatingMarker(x, y, z, color) {
+
+    const marker = new THREE.Mesh(
+        new THREE.OctahedronGeometry(
+            0.35,
+            1
+        ),
+        new THREE.MeshBasicMaterial({
+            color: color
+        })
+    );
+
+    marker.position.set(
+        x,
+        y,
+        z
+    );
+
+    scene.add(marker);
+
+    return marker;
+}
+
+createFloatingMarker(
+    -12,
+    5,
+    -8,
+    0x00eaff
+);
+
+createFloatingMarker(
+    12,
+    6,
+    -8,
+    0x7b5cff
+);
+
+createFloatingMarker(
+    -12,
+    5,
+    8,
+    0x7b5cff
+);
+
+createFloatingMarker(
+    12,
+    6,
+    8,
+    0x00eaff
+);
 
 /* ==========================================
    CENTRAL AI CORE
