@@ -832,81 +832,226 @@ createFloatingMarker(
 );
 
 /* ==========================================
-   CENTRAL AI CORE
+   PREMIUM CENTRAL PLAZA
    ========================================== */
 
-const coreGroup =
-    new THREE.Group();
-
+const coreGroup = new THREE.Group();
 scene.add(coreGroup);
 
-const core =
-    new THREE.Mesh(
-        new THREE.IcosahedronGeometry(
-            2.2,
-            2
-        ),
-        new THREE.MeshStandardMaterial({
-            color: 0x00eaff,
-            emissive: 0x00eaff,
-            emissiveIntensity: 3,
-            roughness: 0.2,
-            metalness: 0.6,
-            wireframe: false
-        })
-    );
+/* MAIN PLATFORM */
 
-coreGroup.add(core);
+const platform = new THREE.Mesh(
+    new THREE.CylinderGeometry(5.8, 6.2, 0.35, 64),
+    new THREE.MeshStandardMaterial({
+        color: 0x08111f,
+        metalness: 0.85,
+        roughness: 0.25,
+        emissive: 0x061a2b,
+        emissiveIntensity: 0.8
+    })
+);
 
-const coreWire =
-    new THREE.Mesh(
-        new THREE.IcosahedronGeometry(
-            2.6,
-            1
+platform.position.y = 0.25;
+coreGroup.add(platform);
+
+/* PLATFORM EDGE */
+
+const platformEdge = new THREE.Mesh(
+    new THREE.TorusGeometry(
+        5.7,
+        0.07,
+        12,
+        96
+    ),
+    new THREE.MeshBasicMaterial({
+        color: 0x00eaff
+    })
+);
+
+platformEdge.rotation.x = Math.PI / 2;
+platformEdge.position.y = 0.45;
+coreGroup.add(platformEdge);
+
+/* INNER PLATFORM RING */
+
+const innerRing = new THREE.Mesh(
+    new THREE.TorusGeometry(
+        3.7,
+        0.035,
+        8,
+        96
+    ),
+    new THREE.MeshBasicMaterial({
+        color: 0x7b5cff
+    })
+);
+
+innerRing.rotation.x = Math.PI / 2;
+innerRing.position.y = 0.48;
+coreGroup.add(innerRing);
+
+/* CENTRAL HOLOGRAM */
+
+const holo = new THREE.Mesh(
+    new THREE.CylinderGeometry(
+        1.8,
+        1.8,
+        3.8,
+        32,
+        1,
+        true
+    ),
+    new THREE.MeshBasicMaterial({
+        color: 0x00eaff,
+        transparent: true,
+        opacity: 0.08,
+        side: THREE.DoubleSide
+    })
+);
+
+holo.position.y = 2.3;
+coreGroup.add(holo);
+
+/* HOLOGRAM TOP */
+
+const holoTop = new THREE.Mesh(
+    new THREE.TorusGeometry(
+        1.8,
+        0.035,
+        8,
+        64
+    ),
+    new THREE.MeshBasicMaterial({
+        color: 0x00eaff
+    })
+);
+
+holoTop.rotation.x = Math.PI / 2;
+holoTop.position.y = 4.2;
+coreGroup.add(holoTop);
+
+/* HOLOGRAM BOTTOM */
+
+const holoBottom = holoTop.clone();
+holoBottom.position.y = 0.5;
+coreGroup.add(holoBottom);
+
+/* FLOATING AI SYMBOL */
+
+const aiSymbol = new THREE.Mesh(
+    new THREE.OctahedronGeometry(
+        1.05,
+        1
+    ),
+    new THREE.MeshStandardMaterial({
+        color: 0x111b31,
+        emissive: 0x00eaff,
+        emissiveIntensity: 2.5,
+        metalness: 0.8,
+        roughness: 0.2
+    })
+);
+
+aiSymbol.position.y = 2.35;
+coreGroup.add(aiSymbol);
+
+/* SYMBOL OUTLINE */
+
+const symbolWire = new THREE.Mesh(
+    new THREE.OctahedronGeometry(
+        1.25,
+        1
+    ),
+    new THREE.MeshBasicMaterial({
+        color: 0x7b5cff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.8
+    })
+);
+
+symbolWire.position.y = 2.35;
+coreGroup.add(symbolWire);
+
+/* HOLOGRAM BEAMS */
+
+for (let i = 0; i < 4; i++) {
+
+    const beam = new THREE.Mesh(
+        new THREE.BoxGeometry(
+            0.035,
+            3.5,
+            0.035
         ),
         new THREE.MeshBasicMaterial({
-            color: 0x7b5cff,
-            wireframe: true,
+            color: i % 2 === 0
+                ? 0x00eaff
+                : 0x7b5cff,
             transparent: true,
-            opacity: 0.7
+            opacity: 0.8
         })
     );
 
-coreGroup.add(coreWire);
+    const angle =
+        (Math.PI * 2 / 4) * i;
 
-for (
-    let i = 0;
-    i < 3;
-    i++
-) {
+    beam.position.set(
+        Math.cos(angle) * 2.4,
+        2.1,
+        Math.sin(angle) * 2.4
+    );
 
-    const ring =
-        new THREE.Mesh(
-            new THREE.TorusGeometry(
-                3 + i * 0.55,
-                0.035,
-                8,
-                64
-            ),
-            new THREE.MeshBasicMaterial({
-                color:
-                    i % 2 === 0
-                        ? 0x00eaff
-                        : 0x7b5cff
-            })
-        );
-
-    ring.rotation.x =
-        Math.random() * Math.PI;
-
-    ring.rotation.y =
-        Math.random() * Math.PI;
-
-    ring.userData.speed =
-        0.003 + i * 0.002;
-
-    coreGroup.add(ring);
+    coreGroup.add(beam);
 }
+
+/* FLOATING DATA NODES */
+
+const dataNodes = [];
+
+for (let i = 0; i < 8; i++) {
+
+    const node = new THREE.Mesh(
+        new THREE.SphereGeometry(
+            0.09,
+            12,
+            12
+        ),
+        new THREE.MeshBasicMaterial({
+            color:
+                i % 2 === 0
+                    ? 0x00eaff
+                    : 0x7b5cff
+        })
+    );
+
+    const angle =
+        (Math.PI * 2 / 8) * i;
+
+    node.position.set(
+        Math.cos(angle) * 3.2,
+        1.2 + (i % 3) * 0.7,
+        Math.sin(angle) * 3.2
+    );
+
+    coreGroup.add(node);
+    dataNodes.push(node);
+}
+
+/* SMALL LIGHT */
+
+const coreLight = new THREE.PointLight(
+    0x00eaff,
+    12,
+    18
+);
+
+coreLight.position.set(
+    0,
+    3,
+    0
+);
+
+coreGroup.add(coreLight);
 
 /* ==========================================
    ROBOT PLAYER
@@ -1490,36 +1635,47 @@ function animate() {
     updatePlayer();
     updateCamera();
 
-    /* AI CORE */
+    /* PREMIUM PLAZA ANIMATION */
 
-    core.rotation.y =
-        time * 0.5;
+aiSymbol.rotation.y =
+    time * 0.7;
 
-    core.rotation.x =
-        time * 0.25;
+aiSymbol.rotation.x =
+    Math.sin(time * 1.2) * 0.15;
 
-    coreWire.rotation.y =
-        -time * 0.35;
+symbolWire.rotation.y =
+    -time * 0.45;
 
-    coreGroup.position.y =
-        3 +
-        Math.sin(time * 2) * 0.3;
+symbolWire.rotation.z =
+    time * 0.25;
 
-    /* RINGS */
+holoTop.rotation.z =
+    time * 0.5;
 
-    coreGroup.children.forEach(
-        child => {
+holoBottom.rotation.z =
+    -time * 0.35;
 
-            if (
-                child.userData &&
-                child.userData.speed
-            ) {
+holo.scale.y =
+    1 + Math.sin(time * 2) * 0.08;
 
-                child.rotation.z +=
-                    child.userData.speed;
-            }
-        }
-    );
+dataNodes.forEach((node, index) => {
+
+    const angle =
+        time * 0.4 +
+        (Math.PI * 2 / dataNodes.length) * index;
+
+    node.position.x =
+        Math.cos(angle) * 3.2;
+
+    node.position.z =
+        Math.sin(angle) * 3.2;
+
+    node.position.y =
+        1.5 +
+        Math.sin(
+            time * 2 + index
+        ) * 0.6;
+});
 
     /* BUILDING RINGS */
 
